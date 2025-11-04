@@ -2,6 +2,8 @@ import {
   arSA,
   be,
   bn,
+  bg,
+  bs,
   cs,
   sk,
   da,
@@ -42,12 +44,15 @@ import {
   ca,
   hu,
   vi,
+  uz,
 } from 'date-fns/locale';
 
 export const languages = {
   'ar-SA': { label: 'العربية', dateLocale: arSA, dir: 'rtl' },
   'be-BY': { label: 'Беларуская', dateLocale: be },
+  'bg-BG': { label: 'български език', dateLocale: bg },
   'bn-BD': { label: 'বাংলা', dateLocale: bn },
+  'bs-BA': { label: 'Bosanski', dateLocale: bs },
   'ca-ES': { label: 'Català', dateLocale: ca },
   'cs-CZ': { label: 'Čeština', dateLocale: cs },
   'da-DK': { label: 'Dansk', dateLocale: da },
@@ -91,6 +96,7 @@ export const languages = {
   'tr-TR': { label: 'Türkçe', dateLocale: tr },
   'uk-UA': { label: 'українська', dateLocale: uk },
   'ur-PK': { label: 'Urdu (Pakistan)', dateLocale: uk, dir: 'rtl' },
+  'uz-UZ': { label: 'O‘zbekcha', dateLocale: uz },
   'vi-VN': { label: 'Tiếng Việt', dateLocale: vi },
   'zh-CN': { label: '中文', dateLocale: zhCN },
   'zh-TW': { label: '中文(繁體)', dateLocale: zhTW },

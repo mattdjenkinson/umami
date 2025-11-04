@@ -1,11 +1,11 @@
-import { FixedSizeList } from 'react-window';
-import { useSpring, animated, config } from '@react-spring/web';
+import Empty from '@/components/common/Empty';
+import { useMessages } from '@/components/hooks';
+import { formatLongCurrency, formatLongNumber } from '@/lib/format';
+import { animated, config, useSpring } from '@react-spring/web';
 import classNames from 'classnames';
-import Empty from 'components/common/Empty';
-import { formatLongNumber } from 'lib/format';
-import { useMessages } from 'components/hooks';
-import styles from './ListTable.module.css';
 import { ReactNode } from 'react';
+import { FixedSizeList } from 'react-window';
+import styles from './ListTable.module.css';
 
 const ITEM_SIZE = 30;
 
@@ -14,11 +14,13 @@ export interface ListTableProps {
   title?: string;
   metric?: string;
   className?: string;
-  renderLabel?: (row: any) => ReactNode;
+  renderLabel?: (row: any, index: number) => ReactNode;
+  renderChange?: (row: any, index: number) => ReactNode;
   animate?: boolean;
   virtualize?: boolean;
   showPercentage?: boolean;
   itemCount?: number;
+  currency?: string;
 }
 
 export function ListTable({
@@ -27,30 +29,34 @@ export function ListTable({
   metric,
   className,
   renderLabel,
+  renderChange,
   animate = true,
   virtualize = false,
   showPercentage = true,
   itemCount = 10,
+  currency,
 }: ListTableProps) {
   const { formatMessage, labels } = useMessages();
 
-  const getRow = row => {
+  const getRow = (row: { x: any; y: any; z: any }, index: number) => {
     const { x: label, y: value, z: percent } = row;
 
     return (
       <AnimatedRow
         key={label}
-        label={renderLabel ? renderLabel(row) : label ?? formatMessage(labels.unknown)}
+        label={renderLabel ? renderLabel(row, index) : label ?? formatMessage(labels.unknown)}
         value={value}
         percent={percent}
         animate={animate && !virtualize}
         showPercentage={showPercentage}
+        change={renderChange ? renderChange(row, index) : null}
+        currency={currency}
       />
     );
   };
 
   const Row = ({ index, style }) => {
-    return <div style={style}>{getRow(data[index])}</div>;
+    return <div style={style}>{getRow(data[index], index)}</div>;
   };
 
   return (
@@ -71,14 +77,22 @@ export function ListTable({
             {Row}
           </FixedSizeList>
         ) : (
-          data.map(row => getRow(row))
+          data.map(getRow)
         )}
       </div>
     </div>
   );
 }
 
-const AnimatedRow = ({ label, value = 0, percent, animate, showPercentage = true }) => {
+const AnimatedRow = ({
+  label,
+  value = 0,
+  percent,
+  change,
+  animate,
+  showPercentage = true,
+  currency,
+}) => {
   const props = useSpring({
     width: percent,
     y: value,
@@ -90,16 +104,17 @@ const AnimatedRow = ({ label, value = 0, percent, animate, showPercentage = true
     <div className={styles.row}>
       <div className={styles.label}>{label}</div>
       <div className={styles.value}>
+        {change}
         <animated.div className={styles.value} title={props?.y as any}>
-          {props.y?.to(formatLongNumber)}
+          {currency
+            ? props.y?.to(n => formatLongCurrency(n, currency))
+            : props.y?.to(formatLongNumber)}
         </animated.div>
       </div>
       {showPercentage && (
         <div className={styles.percent}>
           <animated.div className={styles.bar} style={{ width: props.width.to(n => `${n}%`) }} />
-          <animated.span className={styles.percentValue}>
-            {props.width.to(n => `${n?.toFixed?.(0)}%`)}
-          </animated.span>
+          <animated.span>{props.width.to(n => `${n?.toFixed?.(0)}%`)}</animated.span>
         </div>
       )}
     </div>

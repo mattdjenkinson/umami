@@ -4,6 +4,8 @@ export function useFields() {
   const { formatMessage, labels } = useMessages();
 
   const fields = [
+    // { name: 'cohort', type: 'string', label: formatMessage(labels.cohort) },
+    // { name: 'segment', type: 'string', label: formatMessage(labels.segment) },
     { name: 'url', type: 'string', label: formatMessage(labels.url) },
     { name: 'title', type: 'string', label: formatMessage(labels.pageTitle) },
     { name: 'referrer', type: 'string', label: formatMessage(labels.referrer) },
@@ -14,6 +16,8 @@ export function useFields() {
     { name: 'country', type: 'string', label: formatMessage(labels.country) },
     { name: 'region', type: 'string', label: formatMessage(labels.region) },
     { name: 'city', type: 'string', label: formatMessage(labels.city) },
+    { name: 'host', type: 'string', label: formatMessage(labels.host) },
+    { name: 'tag', type: 'string', label: formatMessage(labels.tag) },
   ];
 
   return { fields };
